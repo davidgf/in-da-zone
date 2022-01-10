@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "name": "In Da Zone",
+  "version": "1.0",
+  "description": "",
+  "icons": {
+    "48": "static/icons/sb_icon.svg"
+  },
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "browser_action": {
+    "default_icon": "static/icons/sb_icon_big.svg",
+    "default_title": "In Da Zone",
+    "default_popup": "dist/index.html"
+  },
+  "web_accessible_resources": [
+    "static/redirect/redirect.html",
+    "static/redirect/redirect.css"
+  ],
+  "background": {
+    "scripts": [
+      "dist/background.js"
+    ]
+  }
+}

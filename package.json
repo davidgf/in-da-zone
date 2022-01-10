@@ -1,0 +1,24 @@
+{
+  "name": "in-da-zone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc -b tsconfig.build.json",
+    "dev": "npm run dev --workspace=idz-background & npm run dev --workspace=idz-extension &"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "packages/idz-background",
+    "packages/idz-popup",
+    "packages/idz-extension"
+  ],
+  "devDependencies": {
+    "ts-standard": "^11.0.0"
+  },
+  "ts-standard": {
+    "project": "./packages/**/tsconfig.json"
+  }
+}
