@@ -28,7 +28,7 @@ export default class BackgroundController {
   async handleTabUpdated (tabId: number, changeInfo: { url?: string }): Promise<void> {
     console.log('CHECKING', tabId, changeInfo)
     if (changeInfo.url != null) {
-      console.log(`********************************************************************************Tab: ${tabId} URL changed to ${changeInfo.url}`)
+      console.log(`Tab: ${tabId} URL changed to ${changeInfo.url}`)
       const url = new URL(changeInfo.url)
       console.log('url.hostname: ', url.hostname)
       console.log('isBlocking: ', this.isBlocking)

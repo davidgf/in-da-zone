@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
-    "copy-webpack-plugin": "^10.2.0",
+    "copy-webpack-plugin": "^6.4.1",
     "source-map-loader": "^3.0.1",
     "ts-loader": "^9.2.6",
     "web-ext-plugin": "^1.5.0",
