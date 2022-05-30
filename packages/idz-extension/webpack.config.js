@@ -13,16 +13,14 @@ module.exports = {
     path: path.resolve('dist')
   },
   plugins: [
-    // new HtmlWebpackPlugin({
-    //   template: './src/popup/index.html',
-    //   filename: 'index.html',
-    //   inject: 'body',
-    //   chunks: ['popup']
-    // }),
     new WebExtPlugin({ browserConsole: true }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'static' }
+        { from: 'static' },
+        {
+          from: '../idz-popup/build',
+          to: 'popup'
+        }
       ]
     })
   ],

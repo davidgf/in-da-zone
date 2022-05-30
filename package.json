@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc -b tsconfig.build.json",
-    "dev": "concurrently \"npm run dev --workspace=idz-background\" \"npm run dev --workspace=idz-extension\""
+    "dev": "concurrently \"npm run dev --workspace=idz-background\" \"npm run dev --workspace=idz-popup\" \"npm run dev --workspace=idz-extension\""
   },
   "author": "",
   "license": "ISC",

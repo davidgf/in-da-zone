@@ -17,10 +17,14 @@ export default class Store {
   }
 
   async load (): Promise<void> {
+    const all = await this.storageClient.get()
+    console.log('all: ', all)
+
     await this.storageClient.get('blockedHosts')
       .then(data => {
-        console.log('Loaded data: ', data)
-        this.settings = { ...this.settings, ...data }
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>> Loaded data: ', data)
+        const blockedHosts = JSON.parse(data.blockedHosts)
+        this.settings = { ...this.settings, ...{ blockedHosts } }
       })
   }
 

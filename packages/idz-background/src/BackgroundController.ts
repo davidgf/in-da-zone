@@ -28,6 +28,7 @@ export default class BackgroundController {
   async handleTabUpdated (tabId: number, changeInfo: { url?: string }): Promise<void> {
     console.log('CHECKING', tabId, changeInfo)
     if (changeInfo.url != null) {
+      await this.store.load()
       console.log(`Tab: ${tabId} URL changed to ${changeInfo.url}`)
       const url = new URL(changeInfo.url)
       console.log('url.hostname: ', url.hostname)
