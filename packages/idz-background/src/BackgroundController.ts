@@ -1,17 +1,21 @@
 import * as browser from 'webextension-polyfill'
 import Store from './Store'
+import Timer from './Timer'
 
 export default class BackgroundController {
   store: Store
+  timer: Timer
   isBlocking: boolean
 
-  constructor ({ store }: { store: Store }) {
+  constructor ({ store, timer }: { store: Store, timer: Timer }) {
     this.store = store
+    this.timer = timer
     this.isBlocking = false
   }
 
   startBlocking (): void {
     this.isBlocking = true
+    this.timer.start()
     browser.tabs.onUpdated.addListener(this.handleTabUpdated.bind(this))
   }
 
@@ -26,16 +30,11 @@ export default class BackgroundController {
   }
 
   async handleTabUpdated (tabId: number, changeInfo: { url?: string }): Promise<void> {
-    console.log('CHECKING', tabId, changeInfo)
     if (changeInfo.url != null) {
       await this.store.load()
-      console.log(`Tab: ${tabId} URL changed to ${changeInfo.url}`)
       const url = new URL(changeInfo.url)
-      console.log('url.hostname: ', url.hostname)
-      console.log('isBlocking: ', this.isBlocking)
       if (this.isBlocking && this.isHostnameBlocked(url.hostname)) {
         const redirectUrl = browser.runtime.getURL('/static/redirect/redirect.html')
-        console.log('redirectUrl: ', redirectUrl)
         await browser.tabs.update(tabId, { url: redirectUrl })
       }
     }
