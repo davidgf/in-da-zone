@@ -2,12 +2,15 @@
 
 import BackgroundController from './BackgroundController'
 import Store from './Store'
-import Timer from './Timer'
+import * as browser from 'webextension-polyfill'
 
 export async function startController (): Promise<void> {
   const store = new Store()
   await store.load()
-  const timer = new Timer({ duration: 15 })
-  const controller = new BackgroundController({ store, timer })
-  controller.startBlocking()
+  const controller = new BackgroundController({ store })
+  browser.runtime.onMessage.addListener((request, sender) => {
+    if (request.startBlocking === true) {
+      controller.startBlocking()
+    }
+  })
 }

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/promise-function-async */
 import * as browser from 'webextension-polyfill'
 import { Settings } from './common'
+import { TimerState } from './Timer'
 
 const defaultSettings: Settings = { blockedHosts: ['twitter.com'] }
 
@@ -24,10 +25,12 @@ export default class Store {
       })
   }
 
-  save (newSettings: Settings): Promise<void> {
+  save (newSettings: { blockedHosts?: string[], timerState?: TimerState }): Promise<void> {
     return this.storageClient.set(newSettings)
-      .then(() => {
+      .then(data => {
         this.settings = { ...this.settings, ...newSettings }
+        console.log('SAVED NEW STATE', this.settings, data)
       })
+      .catch(err => console.error('ERROR SAVING STATE', err))
   }
 }

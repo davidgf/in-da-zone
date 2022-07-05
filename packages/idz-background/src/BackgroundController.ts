@@ -1,27 +1,49 @@
 import * as browser from 'webextension-polyfill'
 import Store from './Store'
-import Timer from './Timer'
+import Timer, { TimerState } from './Timer'
 
 export default class BackgroundController {
   store: Store
   timer: Timer
   isBlocking: boolean
 
-  constructor ({ store, timer }: { store: Store, timer: Timer }) {
+  constructor ({ store }: { store: Store }) {
     this.store = store
-    this.timer = timer
     this.isBlocking = false
+  }
+
+  startFocusTimer (): void {
+    this.timer = new Timer({ duration: 30 })
+    this.timer.on('start', data => this.#persistTimerState(data))
+    this.timer.on('tick', data => this.#persistTimerState(data))
+    this.timer.on('pause', data => this.#persistTimerState(data))
+    this.timer.on('resume', data => this.#persistTimerState(data))
+    this.timer.on('finish', data => {
+      this.isBlocking = false
+      this.#persistTimerState(data)
+    })
+    this.timer.on('stop', data => this.#persistTimerState(data))
+    this.timer.start()
+  }
+
+  #persistTimerState (timerState: TimerState): void {
+    void this.store.save({ timerState })
   }
 
   startBlocking (): void {
-    this.isBlocking = true
-    this.timer.start()
-    browser.tabs.onUpdated.addListener(this.handleTabUpdated.bind(this))
+    if (!this.isBlocking) {
+      this.isBlocking = true
+      browser.tabs.onUpdated.addListener(this.handleTabUpdated.bind(this))
+      this.startFocusTimer()
+    }
   }
 
   stopBlocking (): void {
-    this.isBlocking = false
-    browser.tabs.onUpdated.removeListener(this.handleTabUpdated.bind(this))
+    if (this.isBlocking) {
+      this.isBlocking = false
+      browser.tabs.onUpdated.removeListener(this.handleTabUpdated.bind(this))
+      this.timer.removeAllListeners()
+    }
   }
 
   isHostnameBlocked (hostname: string): boolean {
