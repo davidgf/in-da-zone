@@ -1,16 +1,5 @@
 import { TypedEmitter } from 'tiny-typed-emitter'
-
-export enum TimerStatus {
-  Active,
-  Paused,
-  Stopped
-}
-
-export interface TimerState {
-  duration: number
-  status: TimerStatus
-  remaining: number
-}
+import { TimerState, TimerStatus } from 'idz-shared'
 
 interface TimerEvents {
   start: (state: TimerState) => void

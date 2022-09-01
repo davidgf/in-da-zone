@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/promise-function-async */
 import * as browser from 'webextension-polyfill'
+import { TimerState } from 'idz-shared'
 import { Settings } from './common'
-import { TimerState } from './Timer'
 
 const defaultSettings: Settings = { blockedHosts: ['twitter.com'] }
 

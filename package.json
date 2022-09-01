@@ -6,15 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc -b tsconfig.build.json",
-    "dev": "concurrently \"npm run dev --workspace=idz-background\" \"npm run dev --workspace=idz-popup\" \"npm run dev --workspace=idz-extension\""
+    "dev": "concurrently \"npm run dev --workspace=idz-shared\" \"npm run dev --workspace=idz-background\" \"npm run build --workspace=idz-popup\" \"npm run dev --workspace=idz-extension\""
   },
   "author": "",
   "license": "ISC",
   "workspaces": [
+    "packages/idz-shared",
     "packages/idz-background",
     "packages/idz-popup",
-    "packages/idz-extension",
-    "packages/idz-shared"
+    "packages/idz-extension"
   ],
   "devDependencies": {
     "concurrently": "^7.0.0",

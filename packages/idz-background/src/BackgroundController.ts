@@ -1,6 +1,7 @@
 import * as browser from 'webextension-polyfill'
+import { TimerState } from 'idz-shared'
 import Store from './Store'
-import Timer, { TimerState } from './Timer'
+import Timer from './Timer'
 
 export default class BackgroundController {
   store: Store
