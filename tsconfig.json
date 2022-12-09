@@ -5,6 +5,7 @@
     "target": "es6",
     "strictNullChecks": true,
     "moduleResolution": "node",
-    "composite": true
+    "composite": true,
+    "noImplicitAny": true
   }
 }

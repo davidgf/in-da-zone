@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/promise-function-async */
 import * as browser from 'webextension-polyfill'
-import { TimerState } from 'idz-shared'
-import { Settings } from './common'
+import Timer from './Timer'
+import { TimerState, Settings } from 'idz-shared'
 
-const defaultSettings: Settings = { blockedHosts: ['twitter.com'] }
+const defaultTimer: Timer = new Timer()
+const defaultSettings: Settings = { blockedHosts: [], timerState: defaultTimer.state }
 
 export default class Store {
   settings: Settings
@@ -18,10 +19,11 @@ export default class Store {
   }
 
   async load (): Promise<void> {
-    await this.storageClient.get('blockedHosts')
+    await this.storageClient.get()
       .then(data => {
-        const blockedHosts = data.blockedHosts !== undefined ? JSON.parse(data.blockedHosts) : []
-        this.settings = { ...this.settings, ...{ blockedHosts } }
+        const blockedHosts = data.blockedHosts !== undefined ? data.blockedHosts : []
+        const timerState = data.timerState !== undefined ? data.timerState : {}
+        this.settings = { blockedHosts, timerState }
       })
   }
 

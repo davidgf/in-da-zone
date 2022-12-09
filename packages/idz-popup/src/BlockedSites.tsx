@@ -1,18 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import * as browser from 'webextension-polyfill'
+import { TimerState } from 'idz-shared'
 
 const BLOCKED_HOSTS_KEY = 'blockedHosts'
-enum TimerStatus {
-  Active,
-  Paused,
-  Stopped
-}
-
-interface TimerState {
-  duration: number
-  status: TimerStatus
-  remaining: number
-}
 
 export default function BlockedSites (): JSX.Element {
   const [blockedSites, setBlockedSites] = useState<String[]>([])
@@ -36,7 +26,7 @@ export default function BlockedSites (): JSX.Element {
       .then(result => {
         console.log('LOADED Blocked Sites', result)
         const persistedBlockedSites = (result[BLOCKED_HOSTS_KEY] !== undefined)
-          ? JSON.parse(result[BLOCKED_HOSTS_KEY])
+          ? result[BLOCKED_HOSTS_KEY]
           : []
         setBlockedSites(persistedBlockedSites)
         console.log('result.timerState: ', result.timerState)
@@ -49,7 +39,7 @@ export default function BlockedSites (): JSX.Element {
   }, [])
 
   useEffect(() => {
-    browser.storage.local.set({ [BLOCKED_HOSTS_KEY]: JSON.stringify(blockedSites) })
+    browser.storage.local.set({ [BLOCKED_HOSTS_KEY]: blockedSites })
       .catch(err => console.error('Error saving blocked sites', err))
   })
 

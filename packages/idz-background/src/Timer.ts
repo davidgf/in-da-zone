@@ -16,7 +16,7 @@ export default class Timer extends TypedEmitter<TimerEvents> {
   remaining: number
   #timerId: NodeJS.Timeout | null
 
-  constructor ({ duration = 0, status = TimerStatus.Stopped }: { duration: number, status?: TimerStatus }) {
+  constructor ({ duration = 0, status = TimerStatus.Stopped }: { duration?: number, status?: TimerStatus } = {}) {
     super()
     this.duration = duration
     this.status = status
