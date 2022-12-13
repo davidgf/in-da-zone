@@ -1,5 +1,5 @@
 import * as browser from 'webextension-polyfill'
-import { TimerState } from 'idz-shared'
+import { TimerState, TimerEventTypes as TimerEvent } from 'idz-shared'
 import Store from './Store'
 import Timer from './Timer'
 
@@ -15,16 +15,21 @@ export default class BackgroundController {
 
   startFocusTimer (): void {
     this.timer = new Timer({ duration: 30 })
-    this.timer.on('start', data => this.#persistTimerState(data))
-    this.timer.on('tick', data => this.#persistTimerState(data))
-    this.timer.on('pause', data => this.#persistTimerState(data))
-    this.timer.on('resume', data => this.#persistTimerState(data))
-    this.timer.on('finish', data => {
+    this.timer.on(TimerEvent.Started, data => this.#handleTimerEvent(TimerEvent.Started, data))
+    this.timer.on(TimerEvent.Ticked, data => this.#handleTimerEvent(TimerEvent.Ticked, data))
+    this.timer.on(TimerEvent.Paused, data => this.#handleTimerEvent(TimerEvent.Paused, data))
+    this.timer.on(TimerEvent.Resumed, data => this.#handleTimerEvent(TimerEvent.Resumed, data))
+    this.timer.on(TimerEvent.Finished, data => {
       this.isBlocking = false
-      this.#persistTimerState(data)
+      this.#handleTimerEvent(TimerEvent.Finished, data)
     })
-    this.timer.on('stop', data => this.#persistTimerState(data))
+    this.timer.on(TimerEvent.Stopped, data => this.#handleTimerEvent(TimerEvent.Stopped, data))
     this.timer.start()
+  }
+
+  #handleTimerEvent (eventType: TimerEvent, timerState: TimerState): void {
+    this.#persistTimerState(timerState)
+    void browser.runtime.sendMessage({ eventType, timerState })
   }
 
   #persistTimerState (timerState: TimerState): void {

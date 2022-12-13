@@ -1,13 +1,13 @@
 import { TypedEmitter } from 'tiny-typed-emitter'
-import { TimerState, TimerStatus } from 'idz-shared'
+import { TimerState, TimerStatus, TimerEventTypes as EventType } from 'idz-shared'
 
 interface TimerEvents {
-  start: (state: TimerState) => void
-  tick: (state: TimerState) => void
-  pause: (state: TimerState) => void
-  resume: (state: TimerState) => void
-  finish: (state: TimerState) => void
-  stop: (state: TimerState) => void
+  [EventType.Started]: (state: TimerState) => void
+  [EventType.Ticked]: (state: TimerState) => void
+  [EventType.Paused]: (state: TimerState) => void
+  [EventType.Resumed]: (state: TimerState) => void
+  [EventType.Finished]: (state: TimerState) => void
+  [EventType.Stopped]: (state: TimerState) => void
 }
 
 export default class Timer extends TypedEmitter<TimerEvents> {
@@ -37,7 +37,7 @@ export default class Timer extends TypedEmitter<TimerEvents> {
       this.remaining = this.duration
       this.status = TimerStatus.Active
       this.#startTimer()
-      this.emit('start', this.state)
+      this.emit(EventType.Started, this.state)
     }
   }
 
@@ -45,21 +45,21 @@ export default class Timer extends TypedEmitter<TimerEvents> {
     if (this.status === TimerStatus.Active) {
       this.remaining = this.remaining - 1
       if (this.remaining <= 0) this.finish()
-      else this.emit('tick', this.state)
+      else this.emit(EventType.Ticked, this.state)
     }
   }
 
   finish (): void {
     this.status = TimerStatus.Stopped
     this.#clearTimer()
-    this.emit('finish', this.state)
+    this.emit(EventType.Finished, this.state)
   }
 
   pause (): void {
     if (this.status === TimerStatus.Active) {
       this.status = TimerStatus.Paused
       this.#clearTimer()
-      this.emit('pause', this.state)
+      this.emit(EventType.Paused, this.state)
     }
   }
 
@@ -67,7 +67,7 @@ export default class Timer extends TypedEmitter<TimerEvents> {
     if (this.status === TimerStatus.Paused) {
       this.status = TimerStatus.Active
       this.#startTimer()
-      this.emit('resume', this.state)
+      this.emit(EventType.Resumed, this.state)
     }
   }
 
@@ -75,7 +75,7 @@ export default class Timer extends TypedEmitter<TimerEvents> {
     if (this.status === TimerStatus.Active || this.status === TimerStatus.Paused) {
       this.status = TimerStatus.Stopped
       this.#clearTimer()
-      this.emit('stop', this.state)
+      this.emit(EventType.Stopped, this.state)
     }
   }
 

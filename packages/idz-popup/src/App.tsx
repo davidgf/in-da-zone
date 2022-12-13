@@ -2,6 +2,7 @@ import React from 'react'
 // @ts-expect-error
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import BlockedSites from './BlockedSites'
+import Timer from './Timer'
 import './App.css'
 
 function App (): JSX.Element {
@@ -15,7 +16,7 @@ function App (): JSX.Element {
           </TabList>
         </header>
         <TabPanel>
-          <h2>Any content 1</h2>
+          <Timer />
         </TabPanel>
         <TabPanel>
           <BlockedSites />

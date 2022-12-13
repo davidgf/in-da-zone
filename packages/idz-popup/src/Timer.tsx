@@ -9,8 +9,8 @@ export default function Timer (): JSX.Element {
     void browser.runtime.sendMessage({ startBlocking: true })
   }
 
-  browser.runtime.onMessage.addListener((request, sender) => {
-    console.log('LISTENED FROM POPUP', request, sender)
+  browser.runtime.onMessage.addListener(request => {
+    setTimerState(request.timerState)
   })
 
   useEffect(() => {
