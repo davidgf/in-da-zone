@@ -1,3 +1,8 @@
+body {
+  width: 500px;
+  height: 600px;
+}
+
 .App {
   text-align: center;
 }
@@ -15,13 +20,38 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 50px;
+  height: 50px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
+  /* align-items: center;
+  justify-content: center; */
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.react-tabs__tab-list {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+}
+
+.react-tabs__tab, .react-tabs__tab--selected {
+  width: 50%;
+  line-height: 50px;
+  background-color: darkblue;
+  color: white;
+  text-decoration: none;
+}
+.react-tabs__tab:hover, .react-tabs__tab--selected:hover {
+  background-color: aliceblue;
+  color: black;
+}
+
+.react-tabs__tab--selected {
+  background-color: black;
 }
 
 .App-link {
