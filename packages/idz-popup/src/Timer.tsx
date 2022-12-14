@@ -7,12 +7,6 @@ import * as browser from 'webextension-polyfill'
 import { TimerState, TimerStatus } from 'idz-shared'
 import { Play, Stop } from 'react-bootstrap-icons'
 
-const defaultState: TimerState = {
-  duration: 0,
-  remaining: 0,
-  status: TimerStatus.Stopped
-}
-
 function TimerControlButton ({ currentState }: { currentState: TimerState }): JSX.Element {
   function startBlocking (): void {
     void browser.runtime.sendMessage({ startBlocking: true })
@@ -27,8 +21,7 @@ function TimerControlButton ({ currentState }: { currentState: TimerState }): JS
     : <Play onClick={startBlocking} size={30} />
 }
 
-export default function Timer (): JSX.Element {
-  const [timerState, setTimerState] = useState<TimerState>(defaultState)
+export default function Timer ({ timerState }: { timerState: TimerState }): JSX.Element {
   const [remainingMinutes, setRemainingMinutes] = useState<number>(0)
   const [remainingSeconds, setRemainingSeconds] = useState<number>(0)
 
@@ -42,21 +35,6 @@ export default function Timer (): JSX.Element {
   function padWithZero (number: number): string {
     return `00${number}`.slice(-2)
   }
-
-  browser.runtime.onMessage.addListener(request => {
-    setTimerState(request.timerState)
-  })
-
-  useEffect(() => {
-    browser.storage.local.get()
-      .then(result => {
-        const persistedTimerState = (result.timerState !== undefined)
-          ? result.timerState
-          : {}
-        setTimerState(persistedTimerState)
-      })
-      .catch(err => console.error('Error loading blocked sites', err))
-  }, [])
 
   return (
     <Container>
