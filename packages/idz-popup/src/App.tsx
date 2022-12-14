@@ -15,6 +15,7 @@ const defaultState: TimerState = {
 }
 function App (): JSX.Element {
   const [timerState, setTimerState] = useState<TimerState>(defaultState)
+  const [blockedSites, setBlockedSites] = useState<String[]>([])
 
   useEffect(() => {
     browser.storage.local.get()
@@ -25,12 +26,29 @@ function App (): JSX.Element {
         console.log('Persisting timer state:', persistedTimerState)
         setTimerState(persistedTimerState)
       })
-      .catch(err => console.error('Error loading blocked sites', err))
+      .catch(err => console.error('Error storing timer state', err))
   }, [])
 
-  browser.runtime.onMessage.addListener(request => {
-    console.log('Message listened from popup', request)
-    setTimerState(request.timerState)
+  useEffect(() => {
+    browser.storage.local.get()
+      .then(result => {
+        const persistedBlockedSites = (result.blockedHosts !== undefined)
+          ? result.blockedHosts
+          : []
+        console.log('Persisting blocked hosts:', persistedBlockedSites)
+        setBlockedSites(persistedBlockedSites)
+      })
+      .catch(err => console.error('Error storing blocked sites', err))
+
+    browser.runtime.onMessage.addListener(request => {
+      console.log('Message listened from popup', request)
+      setTimerState(request.timerState)
+    })
+  }, [])
+
+  useEffect(() => {
+    browser.storage.local.set({ blockedHosts: blockedSites })
+      .catch(err => console.error('Error saving blocked sites', err))
   })
 
   return (
@@ -46,7 +64,7 @@ function App (): JSX.Element {
           <Timer timerState={timerState} />
         </TabPanel>
         <TabPanel>
-          <BlockedSites />
+          <BlockedSites blockedSites={blockedSites} setBlockedSites={setBlockedSites} />
         </TabPanel>
       </Tabs>
     </div>

@@ -30,6 +30,7 @@ export default class BackgroundController {
   #handleTimerEvent (eventType: TimerEvent, timerState: TimerState): void {
     this.#persistTimerState(timerState)
     void browser.runtime.sendMessage({ eventType, timerState })
+      .catch(err => console.log('Error sending message', err))
   }
 
   #persistTimerState (timerState: TimerState): void {
