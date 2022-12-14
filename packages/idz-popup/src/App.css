@@ -3,10 +3,6 @@ body {
   height: 600px;
 }
 
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -23,8 +19,7 @@ body {
   height: 50px;
   display: flex;
   flex-direction: row;
-  /* align-items: center;
-  justify-content: center; */
+  text-align: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }

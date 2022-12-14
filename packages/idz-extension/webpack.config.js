@@ -1,11 +1,9 @@
 const path = require('path')
-// const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WebExtPlugin = require('web-ext-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
-    // popup: './src/popup/index.tsx',
     background: './src/background.ts'
   },
   output: {
@@ -13,7 +11,7 @@ module.exports = {
     path: path.resolve('dist')
   },
   plugins: [
-    new WebExtPlugin({ browserConsole: true }),
+    new WebExtPlugin({ browserConsole: false }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'static' },
