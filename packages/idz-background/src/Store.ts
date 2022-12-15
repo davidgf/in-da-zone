@@ -31,8 +31,7 @@ export default class Store {
     return this.storageClient.set(newSettings)
       .then(data => {
         this.settings = { ...this.settings, ...newSettings }
-        console.log('SAVED NEW STATE', this.settings, data)
       })
-      .catch(err => console.error('ERROR SAVING STATE', err))
+      .catch(err => console.error('[BACKGROUND] ERROR SAVING STATE', err))
   }
 }

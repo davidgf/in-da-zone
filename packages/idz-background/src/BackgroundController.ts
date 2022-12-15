@@ -1,11 +1,13 @@
 import * as browser from 'webextension-polyfill'
-import { TimerState, TimerEventTypes as TimerEvent } from 'idz-shared'
+import { TimerState, PomodoroTimerState, PomodoroEvents } from 'idz-shared'
 import Store from './Store'
 import Timer from './Timer'
+import PomodoroTimer from './PomodoroTimer'
 
 export default class BackgroundController {
   store: Store
   timer: Timer
+  pomodoroTimer: PomodoroTimer
   isBlocking: boolean
 
   constructor ({ store }: { store: Store }) {
@@ -13,35 +15,36 @@ export default class BackgroundController {
     this.isBlocking = false
   }
 
-  startFocusTimer (): void {
-    this.timer = new Timer({ duration: 30 })
-    this.timer.on(TimerEvent.Started, data => this.#handleTimerEvent(TimerEvent.Started, data))
-    this.timer.on(TimerEvent.Ticked, data => this.#handleTimerEvent(TimerEvent.Ticked, data))
-    this.timer.on(TimerEvent.Paused, data => this.#handleTimerEvent(TimerEvent.Paused, data))
-    this.timer.on(TimerEvent.Resumed, data => this.#handleTimerEvent(TimerEvent.Resumed, data))
-    this.timer.on(TimerEvent.Finished, data => {
-      this.isBlocking = false
-      this.#handleTimerEvent(TimerEvent.Finished, data)
-    })
-    this.timer.on(TimerEvent.Stopped, data => this.#handleTimerEvent(TimerEvent.Stopped, data))
-    this.timer.start()
-  }
-
-  #handleTimerEvent (eventType: TimerEvent, timerState: TimerState): void {
-    this.#persistTimerState(timerState)
-    void browser.runtime.sendMessage({ eventType, timerState })
-      .catch(err => console.log('Error sending message', err))
-  }
-
   #persistTimerState (timerState: TimerState): void {
     void this.store.save({ timerState })
+  }
+
+  startPomodoroTimer (): void {
+    this.pomodoroTimer = new PomodoroTimer({ duration: 20, breakDuration: 5, longBreakDuration: 10 })
+    this.pomodoroTimer.on(PomodoroEvents.Started, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Started, data))
+    this.pomodoroTimer.on(PomodoroEvents.Ticked, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Ticked, data))
+    this.pomodoroTimer.on(PomodoroEvents.Finished, data => {
+      this.isBlocking = false
+      this.#handlePomodoroTimerEvent(PomodoroEvents.Finished, data)
+    })
+    this.pomodoroTimer.on(PomodoroEvents.Stopped, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Stopped, data))
+    this.pomodoroTimer.on(PomodoroEvents.CycleStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Stopped, data))
+    this.pomodoroTimer.on(PomodoroEvents.BreakStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Stopped, data))
+    this.pomodoroTimer.start()
+  }
+
+  #handlePomodoroTimerEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
+    console.log('[BACKGROUND] #handlePomodoroTimerEvent', eventType, pomodoroState)
+    this.#persistTimerState(pomodoroState.timer)
+    void browser.runtime.sendMessage({ eventType, pomodoroState })
+      .catch(err => console.log('[BACKGROUND] Error sending message', err))
   }
 
   startBlocking (): void {
     if (!this.isBlocking) {
       this.isBlocking = true
       browser.tabs.onUpdated.addListener(this.handleTabUpdated.bind(this))
-      this.startFocusTimer()
+      this.startPomodoroTimer()
     }
   }
 

@@ -18,3 +18,24 @@ export interface TimerState {
   status: TimerStatus
   remaining: number
 }
+
+export enum PomodoroCycleStatus {
+  Work,
+  Break
+}
+
+export interface PomodoroTimerState {
+  cycles: number
+  currentCycle: number
+  currentCycleStatus: PomodoroCycleStatus
+  timer: TimerState
+}
+
+export enum PomodoroEvents {
+  Started = 'pomodoro-started',
+  Ticked = 'pomodoro-ticked',
+  Finished = 'pomodoro-finished',
+  Stopped = 'pomodoro-stopped',
+  CycleStarted = 'pomodoro-cycle-started',
+  BreakStarted = 'pomodoro-break-started'
+}

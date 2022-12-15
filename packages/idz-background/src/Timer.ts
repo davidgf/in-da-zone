@@ -74,6 +74,7 @@ export default class Timer extends TypedEmitter<TimerEvents> {
   stop (): void {
     if (this.status === TimerStatus.Active || this.status === TimerStatus.Paused) {
       this.status = TimerStatus.Stopped
+      this.remaining = 0
       this.#clearTimer()
       this.emit(EventType.Stopped, this.state)
     }

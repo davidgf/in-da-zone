@@ -23,10 +23,10 @@ function App (): JSX.Element {
         const persistedTimerState = (result.timerState !== undefined)
           ? result.timerState
           : {}
-        console.log('Persisting timer state:', persistedTimerState)
+        console.log('[POPUP] Persisting timer state:', persistedTimerState)
         setTimerState(persistedTimerState)
       })
-      .catch(err => console.error('Error storing timer state', err))
+      .catch(err => console.error('[POPUP] Error storing timer state', err))
   }, [])
 
   useEffect(() => {
@@ -35,20 +35,20 @@ function App (): JSX.Element {
         const persistedBlockedSites = (result.blockedHosts !== undefined)
           ? result.blockedHosts
           : []
-        console.log('Persisting blocked hosts:', persistedBlockedSites)
+        console.log('[POPUP] Persisting blocked hosts:', persistedBlockedSites)
         setBlockedSites(persistedBlockedSites)
       })
-      .catch(err => console.error('Error storing blocked sites', err))
+      .catch(err => console.error('[POPUP] Error storing blocked sites', err))
 
     browser.runtime.onMessage.addListener(request => {
-      console.log('Message listened from popup', request)
-      setTimerState(request.timerState)
+      console.log('[POPUP] Message listened from popup', request)
+      setTimerState(request.pomodoroState.timer)
     })
   }, [])
 
   useEffect(() => {
     browser.storage.local.set({ blockedHosts: blockedSites })
-      .catch(err => console.error('Error saving blocked sites', err))
+      .catch(err => console.error('[POPUP] Error saving blocked sites', err))
   })
 
   return (
