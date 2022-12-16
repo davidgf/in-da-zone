@@ -4,20 +4,26 @@
   "version": "1.0",
   "description": "",
   "icons": {
-    "48": "static/icons/sb_icon.svg"
+    "48": "static/icons/icon_48.png",
+    "96": "static/icons/icon_96.png"
   },
   "permissions": [
     "tabs",
     "storage"
   ],
   "browser_action": {
-    "default_icon": "static/icons/sb_icon_big.svg",
+    "default_icon": {
+      "16": "static/icons/icon_16.png",
+      "32": "static/icons/icon_32.png",
+      "48": "static/icons/icon_48.png",
+      "64": "static/icons/icon_64.png",
+      "96": "static/icons/icon_96.png"
+    },
     "default_title": "In Da Zone",
     "default_popup": "dist/popup/index.html"
   },
   "web_accessible_resources": [
-    "static/redirect/redirect.html",
-    "static/redirect/redirect.css"
+    "static/redirect/redirect.html"
   ],
   "background": {
     "scripts": [
