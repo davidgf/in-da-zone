@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions, @typescript-eslint/promise-function-async */
 import * as browser from 'webextension-polyfill'
-import Timer from './Timer'
-import { TimerState, Settings } from 'idz-shared'
+import PomodoroTimer from './PomodoroTimer'
+import { PomodoroTimerState, Settings } from 'idz-shared'
 
-const defaultTimer: Timer = new Timer()
-const defaultSettings: Settings = { blockedHosts: [], timerState: defaultTimer.state }
+const defaultTimer: PomodoroTimer = new PomodoroTimer()
+const defaultSettings: Settings = { blockedHosts: [], pomodoroTimerState: defaultTimer.state }
 
 export default class Store {
   settings: Settings
@@ -22,12 +22,12 @@ export default class Store {
     await this.storageClient.get()
       .then(data => {
         const blockedHosts = data.blockedHosts !== undefined ? data.blockedHosts : []
-        const timerState = data.timerState !== undefined ? data.timerState : {}
-        this.settings = { blockedHosts, timerState }
+        const pomodoroTimerState = data.pomodoroTimerState !== undefined ? data.pomodoroTimerState : {}
+        this.settings = { blockedHosts, pomodoroTimerState }
       })
   }
 
-  save (newSettings: { blockedHosts?: string[], timerState?: TimerState }): Promise<void> {
+  save (newSettings: { blockedHosts?: string[], pomodoroTimerState?: PomodoroTimerState }): Promise<void> {
     return this.storageClient.set(newSettings)
       .then(data => {
         this.settings = { ...this.settings, ...newSettings }

@@ -1,6 +1,6 @@
-import { TimerState } from './timerTypes'
+import { PomodoroTimerState } from './timerTypes'
 
 export interface Settings {
   blockedHosts: string[]
-  timerState: TimerState
+  pomodoroTimerState: PomodoroTimerState
 }

@@ -4,27 +4,32 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import BlockedSites from './BlockedSites'
 import Timer from './Timer'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { TimerState, TimerStatus } from 'idz-shared'
+import { PomodoroTimerState, PomodoroCycleStatus, TimerStatus } from 'idz-shared'
 import * as browser from 'webextension-polyfill'
 import './App.css'
 
-const defaultState: TimerState = {
-  duration: 0,
-  remaining: 0,
-  status: TimerStatus.Stopped
+const defaultState: PomodoroTimerState = {
+  currentCycle: 0,
+  cycles: 4,
+  currentCycleStatus: PomodoroCycleStatus.Break,
+  timer: {
+    duration: 0,
+    remaining: 0,
+    status: TimerStatus.Stopped
+  }
 }
 function App (): JSX.Element {
-  const [timerState, setTimerState] = useState<TimerState>(defaultState)
+  const [pomodoroTimerState, setPomodoroTimerState] = useState<PomodoroTimerState>(defaultState)
   const [blockedSites, setBlockedSites] = useState<String[]>([])
 
   useEffect(() => {
     browser.storage.local.get()
       .then(result => {
-        const persistedTimerState = (result.timerState !== undefined)
-          ? result.timerState
-          : {}
-        console.log('[POPUP] Persisting timer state:', persistedTimerState)
-        setTimerState(persistedTimerState)
+        const persistedPomodoroTimerState = (result.pomodoroTimerState !== undefined)
+          ? result.pomodoroTimerState
+          : defaultState
+        console.log('[POPUP] Loading timer state:', persistedPomodoroTimerState)
+        setPomodoroTimerState(persistedPomodoroTimerState)
       })
       .catch(err => console.error('[POPUP] Error storing timer state', err))
   }, [])
@@ -42,7 +47,7 @@ function App (): JSX.Element {
 
     browser.runtime.onMessage.addListener(request => {
       console.log('[POPUP] Message listened from popup', request)
-      setTimerState(request.pomodoroState.timer)
+      setPomodoroTimerState(request.pomodoroState)
     })
   }, [])
 
@@ -61,7 +66,7 @@ function App (): JSX.Element {
           </TabList>
         </header>
         <TabPanel>
-          <Timer timerState={timerState} />
+          <Timer pomodoroTimerState={pomodoroTimerState} />
         </TabPanel>
         <TabPanel>
           <BlockedSites blockedSites={blockedSites} setBlockedSites={setBlockedSites} />

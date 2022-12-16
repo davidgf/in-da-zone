@@ -52,12 +52,13 @@ export default class PomodoroTimer extends TypedEmitter<PomodoroTimerEvents> {
     this.emit(PomodoroEvents.Started, this.state)
   }
 
-  stop (): void {
-    this.#clear()
-    this.emit(PomodoroEvents.Stopped, this.state)
-  }
+  // stop (): void {
+  //   this.#clear()
+  //   this.emit(PomodoroEvents.Stopped, this.state)
+  // }
 
   #initTimer (duration: number): void {
+    this.#timer?.removeAllListeners()
     this.#timer = new Timer({ duration })
     this.#timer.on(TimerEvent.Ticked, data => this.#handleTimerEvent(TimerEvent.Ticked, data))
     this.#timer.on(TimerEvent.Finished, data => this.#handleTimerEvent(TimerEvent.Finished, data))
@@ -79,11 +80,13 @@ export default class PomodoroTimer extends TypedEmitter<PomodoroTimerEvents> {
   }
 
   #nextTimer (): void {
-    if (this.currentCycleStatus === PomodoroCycleStatus.Work) {
-      this.#startBreak()
-    }
-    if (this.currentCycleStatus === PomodoroCycleStatus.Break) {
-      this.#startNextCycle()
+    switch (this.currentCycleStatus) {
+      case PomodoroCycleStatus.Work:
+        this.#startBreak()
+        break
+      case PomodoroCycleStatus.Break:
+        this.#startNextCycle()
+        break
     }
   }
 
@@ -105,7 +108,6 @@ export default class PomodoroTimer extends TypedEmitter<PomodoroTimerEvents> {
   }
 
   #finish (): void {
-    console.log('[BACKGROUND] #finish')
     this.#timer?.removeAllListeners()
     this.emit(PomodoroEvents.Finished, this.state)
   }

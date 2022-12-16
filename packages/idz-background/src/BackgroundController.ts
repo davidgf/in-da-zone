@@ -1,5 +1,5 @@
 import * as browser from 'webextension-polyfill'
-import { TimerState, PomodoroTimerState, PomodoroEvents } from 'idz-shared'
+import { PomodoroTimerState, PomodoroEvents } from 'idz-shared'
 import Store from './Store'
 import Timer from './Timer'
 import PomodoroTimer from './PomodoroTimer'
@@ -15,12 +15,12 @@ export default class BackgroundController {
     this.isBlocking = false
   }
 
-  #persistTimerState (timerState: TimerState): void {
-    void this.store.save({ timerState })
+  #persistTimerState (pomodoroTimerState: PomodoroTimerState): void {
+    void this.store.save({ pomodoroTimerState })
   }
 
   startPomodoroTimer (): void {
-    this.pomodoroTimer = new PomodoroTimer({ duration: 20, breakDuration: 5, longBreakDuration: 10 })
+    this.pomodoroTimer = new PomodoroTimer({ duration: 10, breakDuration: 3, longBreakDuration: 3 })
     this.pomodoroTimer.on(PomodoroEvents.Started, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Started, data))
     this.pomodoroTimer.on(PomodoroEvents.Ticked, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Ticked, data))
     this.pomodoroTimer.on(PomodoroEvents.Finished, data => {
@@ -28,14 +28,14 @@ export default class BackgroundController {
       this.#handlePomodoroTimerEvent(PomodoroEvents.Finished, data)
     })
     this.pomodoroTimer.on(PomodoroEvents.Stopped, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Stopped, data))
-    this.pomodoroTimer.on(PomodoroEvents.CycleStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Stopped, data))
-    this.pomodoroTimer.on(PomodoroEvents.BreakStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Stopped, data))
+    this.pomodoroTimer.on(PomodoroEvents.CycleStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.CycleStarted, data))
+    this.pomodoroTimer.on(PomodoroEvents.BreakStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.BreakStarted, data))
     this.pomodoroTimer.start()
   }
 
   #handlePomodoroTimerEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
     console.log('[BACKGROUND] #handlePomodoroTimerEvent', eventType, pomodoroState)
-    this.#persistTimerState(pomodoroState.timer)
+    this.#persistTimerState(pomodoroState)
     void browser.runtime.sendMessage({ eventType, pomodoroState })
       .catch(err => console.log('[BACKGROUND] Error sending message', err))
   }
