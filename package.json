@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc -b tsconfig.build.json",
-    "dev": "concurrently \"npm run dev --workspace=idz-shared\" \"npm run dev --workspace=idz-background\" \"npm run watch --workspace=idz-popup\" \"npm run dev --workspace=idz-extension\""
+    "dev": "concurrently --restart-tries 3 --restart-after 2000 \"npm run dev --workspace=idz-shared\" \"npm run dev --workspace=idz-background\" \"npm run watch --workspace=idz-popup\" \"npm run dev --workspace=idz-extension\"",
+    "build": "npm run build --workspace=idz-shared && npm run build --workspace=idz-background && npm run build --workspace=idz-popup && npm run build --workspace=idz-extension && mkdir dist && cp -r packages/idz-extension/dist/* dist"
   },
   "author": "",
   "license": "ISC",

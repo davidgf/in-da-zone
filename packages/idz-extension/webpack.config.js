@@ -15,6 +15,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'static' },
+        { from: 'manifest.json' },
         {
           from: '../idz-popup/build',
           to: 'popup'

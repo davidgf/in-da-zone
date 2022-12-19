@@ -14,7 +14,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack watch"
+    "dev": "webpack watch",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC"

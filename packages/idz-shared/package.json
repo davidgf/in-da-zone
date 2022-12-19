@@ -2,7 +2,7 @@
   "name": "idz-shared",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "devDependencies": {
     "ts-standard": "^11.0.0"
   },
