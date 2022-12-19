@@ -20,14 +20,14 @@
       "96": "static/icons/icon_96.png"
     },
     "default_title": "In Da Zone",
-    "default_popup": "dist/popup/index.html"
+    "default_popup": "popup/index.html"
   },
   "web_accessible_resources": [
     "static/redirect/redirect.html"
   ],
   "background": {
     "scripts": [
-      "dist/background.js"
+      "background.js"
     ],
     "persistent": true
   }

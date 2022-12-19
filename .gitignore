@@ -20,5 +20,6 @@ typings/
 
 *.tsbuildinfo
 **/dist
+dist.zip
 
 .vscode

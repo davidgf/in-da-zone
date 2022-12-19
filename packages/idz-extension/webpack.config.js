@@ -14,8 +14,10 @@ module.exports = {
     new WebExtPlugin({ browserConsole: false }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'static' },
-        { from: 'manifest.json' },
+        {
+          from: 'static',
+          to: 'static'
+        },
         {
           from: '../idz-popup/build',
           to: 'popup'
