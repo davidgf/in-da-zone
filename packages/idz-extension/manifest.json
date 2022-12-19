@@ -4,8 +4,8 @@
   "version": "1.0",
   "description": "",
   "icons": {
-    "48": "static/icons/icon_48.png",
-    "96": "static/icons/icon_96.png"
+    "48": "dist/static/icons/icon_48.png",
+    "96": "dist/static/icons/icon_96.png"
   },
   "permissions": [
     "tabs",
@@ -13,21 +13,21 @@
   ],
   "browser_action": {
     "default_icon": {
-      "16": "static/icons/icon_16.png",
-      "32": "static/icons/icon_32.png",
-      "48": "static/icons/icon_48.png",
-      "64": "static/icons/icon_64.png",
-      "96": "static/icons/icon_96.png"
+      "16": "dist/static/icons/icon_16.png",
+      "32": "dist/static/icons/icon_32.png",
+      "48": "dist/static/icons/icon_48.png",
+      "64": "dist/static/icons/icon_64.png",
+      "96": "dist/static/icons/icon_96.png"
     },
     "default_title": "In Da Zone",
-    "default_popup": "popup/index.html"
+    "default_popup": "dist/popup/index.html"
   },
   "web_accessible_resources": [
-    "static/redirect/redirect.html"
+    "dist/static/redirect/redirect.html"
   ],
   "background": {
     "scripts": [
-      "background.js"
+      "dist/background.js"
     ],
     "persistent": true
   }

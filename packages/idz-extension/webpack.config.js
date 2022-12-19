@@ -1,8 +1,8 @@
-const path = require('path')
-const WebExtPlugin = require('web-ext-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+import WebExtPlugin from 'web-ext-plugin'
+import path from 'path'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 
-module.exports = {
+export default {
   entry: {
     background: './src/background.ts'
   },
@@ -11,7 +11,12 @@ module.exports = {
     path: path.resolve('dist')
   },
   plugins: [
-    new WebExtPlugin({ browserConsole: false }),
+    new WebExtPlugin({
+      devtools: true,
+      buildPackage: true,
+      artifactsDir: '../../dist',
+      overwriteDest: true
+    }),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -29,7 +34,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json', '.html'],
     alias: {
-      'webextension-polyfill-ts': path.resolve(path.join(__dirname, 'node_modules', 'webextension-polyfill-ts'))
+      'webextension-polyfill-ts': path.resolve(path.join('node_modules', 'webextension-polyfill-ts'))
     }
   },
   module: {

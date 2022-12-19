@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/background.js",
+  "type": "module",
   "devDependencies": {
     "copy-webpack-plugin": "^6.4.1",
     "source-map-loader": "^3.0.1",
     "ts-loader": "^9.2.6",
-    "web-ext-plugin": "^1.5.0",
+    "web-ext-plugin": "^2.7.0",
     "webextension-polyfill-ts": "^0.26.0",
-    "webpack": "^5.65.0",
-    "webpack-cli": "^4.9.1"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
