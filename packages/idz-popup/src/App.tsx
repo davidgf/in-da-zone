@@ -3,10 +3,9 @@ import React, { useState, useEffect } from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import BlockedSites from './BlockedSites'
 import Timer from './Timer'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { PomodoroTimerState, PomodoroCycleStatus, TimerStatus } from 'idz-shared'
 import * as browser from 'webextension-polyfill'
-import './App.css'
+import './App.scss'
 
 const defaultState: PomodoroTimerState = {
   currentCycle: 0,

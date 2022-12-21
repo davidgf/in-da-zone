@@ -1,0 +1,53 @@
+// change the theme
+$primary: #6D9DC5;
+$light: #F5FBEF;
+$btn-color: "white";
+//   $theme-colors: (
+//   // "primary": #6D9DC5,
+//   "light": #F5FBEF
+// );
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+
+body {
+  width: 500px;
+  height: 400px;
+}
+
+.App-header {
+  // background-color: #282c34;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  font-size: calc(10px + 2vmin);
+  // color: white;
+}
+
+.react-tabs__tab-list {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+}
+
+.react-tabs__tab,
+.react-tabs__tab--selected {
+  @extend .btn;
+  @extend .btn-primary;
+  width: 50%;
+  // line-height: 50px;
+  border-radius: 0;
+  // background-color: $primary;
+  // color: white;
+  // text-decoration: none;
+}
+
+.react-tabs__tab:hover,
+.react-tabs__tab--selected:hover {
+  // background-color: aliceblue;
+  // color: black;
+}

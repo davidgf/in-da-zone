@@ -40,7 +40,7 @@ export default function Timer ({ pomodoroTimerState }: { pomodoroTimerState: Pom
   return (
     <Container>
       <Row className='justify-content-center mt-3'>
-        <Col className='bg-secondary bg-opacity-10 col-10 pt-4 pb-4 border border-secondary rounded-1'>
+        <Col className='bg-light col-10 pt-4 pb-4 border border-secondary rounded-1'>
           <h1 className='text-center'>{padWithZero(remainingMinutes)}:{padWithZero(remainingSeconds)}</h1>
         </Col>
       </Row>
@@ -50,7 +50,7 @@ export default function Timer ({ pomodoroTimerState }: { pomodoroTimerState: Pom
       </Row>
       <Row className='justify-content-center mt-3'>
         <Col className='text-center'>
-          <Button>
+          <Button className='btn-primary'>
             <TimerControlButton currentState={pomodoroTimerState.timer} />
           </Button>
         </Col>

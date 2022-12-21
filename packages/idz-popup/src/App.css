@@ -15,7 +15,7 @@ body {
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   height: 50px;
   display: flex;
   flex-direction: row;
@@ -36,21 +36,21 @@ body {
 .react-tabs__tab, .react-tabs__tab--selected {
   width: 50%;
   line-height: 50px;
-  background-color: darkblue;
-  color: white;
+  /* background-color: darkblue;
+  color: white; */
   text-decoration: none;
 }
 .react-tabs__tab:hover, .react-tabs__tab--selected:hover {
-  background-color: aliceblue;
-  color: black;
+  /* background-color: aliceblue;
+  color: black; */
 }
 
 .react-tabs__tab--selected {
-  background-color: black;
+  /* background-color: black; */
 }
 
 .App-link {
-  color: #61dafb;
+  /* color: #61dafb; */
 }
 
 @keyframes App-logo-spin {
