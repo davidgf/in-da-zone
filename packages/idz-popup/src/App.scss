@@ -16,13 +16,15 @@ body {
 }
 
 .App-header {
-  // background-color: #282c34;
   height: 50px;
   display: flex;
   flex-direction: row;
   text-align: center;
   font-size: calc(10px + 2vmin);
-  // color: white;
+}
+
+.btn-primary, .btn-primary:hover {
+  color: white;
 }
 
 .react-tabs__tab-list {
@@ -39,15 +41,27 @@ body {
   @extend .btn;
   @extend .btn-primary;
   width: 50%;
-  // line-height: 50px;
+  line-height: 36px;
   border-radius: 0;
-  // background-color: $primary;
-  // color: white;
-  // text-decoration: none;
 }
 
 .react-tabs__tab:hover,
 .react-tabs__tab--selected:hover {
-  // background-color: aliceblue;
-  // color: black;
+  @extend .btn-primary, :hover;
+}
+
+.pagination {
+  &__dot, &__dot--active {
+    width: 16px;
+    height: 16px;
+    border: 2px solid $primary;
+    border-radius: 100px;
+    display: inline-block;
+    margin: 0 4px;
+    
+  }
+
+  &__dot--active {
+    background: $primary;
+  }
 }

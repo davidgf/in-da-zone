@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Container from 'react-bootstrap/Container'
+import Pagination from 'react-bootstrap/Pagination'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
@@ -19,6 +20,21 @@ function TimerControlButton ({ currentState }: { currentState?: TimerState }): J
   return currentState?.status === TimerStatus.Active
     ? <Stop onClick={stopBlocking} size={30} />
     : <Play onClick={startBlocking} size={30} />
+}
+
+function CyclesPagination ({ pomodoroState }: { pomodoroState: PomodoroTimerState }): JSX.Element {
+  return (
+    <Pagination className='justify-content-center'>
+      {
+        Array(pomodoroState.cycles).fill(0).map((_, index) => {
+          const className = pomodoroState.currentCycle <= index
+            ? 'pagination__dot'
+            : 'pagination__dot--active'
+          return (<div key={`cycle-${index}`} className={className} />)
+        })
+      }
+    </Pagination>
+  )
 }
 
 export default function Timer ({ pomodoroTimerState }: { pomodoroTimerState: PomodoroTimerState }): JSX.Element {
@@ -44,9 +60,8 @@ export default function Timer ({ pomodoroTimerState }: { pomodoroTimerState: Pom
           <h1 className='text-center'>{padWithZero(remainingMinutes)}:{padWithZero(remainingSeconds)}</h1>
         </Col>
       </Row>
-      <Row className='justify-content-center mt-3'>
-        <h2>{pomodoroTimerState.currentCycleStatus}</h2>
-        <h3>{pomodoroTimerState.currentCycle}/{pomodoroTimerState.cycles}</h3>
+      <Row>
+        <CyclesPagination pomodoroState={pomodoroTimerState} />
       </Row>
       <Row className='justify-content-center mt-3'>
         <Col className='text-center'>
