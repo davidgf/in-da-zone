@@ -18,7 +18,7 @@ export default function BlockedSites ({ blockedSites, setBlockedSites }: { block
             <Form.Label>Blocked Websites (enter one per line)</Form.Label>
             <Form.Control
               as='textarea'
-              rows={8}
+              rows={6}
               defaultValue={blockedSites.join('\n')}
               onBlur={blockedSitesChanged}
               placeholder={['twitter.com', 'instagram.com', '...'].join('\n')}

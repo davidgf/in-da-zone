@@ -60,7 +60,7 @@ export default function Timer ({ pomodoroTimerState }: { pomodoroTimerState: Pom
           <h1 className='text-center'>{padWithZero(remainingMinutes)}:{padWithZero(remainingSeconds)}</h1>
         </Col>
       </Row>
-      <Row>
+      <Row className='mt-3'>
         <CyclesPagination pomodoroState={pomodoroTimerState} />
       </Row>
       <Row className='justify-content-center mt-3'>

@@ -11,8 +11,8 @@ $btn-color: "white";
 @import '~bootstrap/scss/bootstrap.scss';
 
 body {
-  width: 500px;
-  height: 400px;
+  width: 350px;
+  height: 265px;
 }
 
 .App-header {
@@ -51,6 +51,9 @@ body {
 }
 
 .pagination {
+  padding: 0;
+  margin-bottom: 0;
+
   &__dot, &__dot--active {
     width: 16px;
     height: 16px;
@@ -58,7 +61,6 @@ body {
     border-radius: 100px;
     display: inline-block;
     margin: 0 4px;
-    
   }
 
   &__dot--active {
