@@ -34,4 +34,8 @@ export default class Store {
       })
       .catch(err => console.error('[BACKGROUND] ERROR SAVING STATE', err))
   }
+
+  clearPomodoroTimer (): Promise<void> {
+    return this.save({ pomodoroTimerState: defaultTimer.state })
+  }
 }

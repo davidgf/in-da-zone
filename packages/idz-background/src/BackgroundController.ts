@@ -23,7 +23,7 @@ export default class BackgroundController {
     this.pomodoroTimer.on(PomodoroEvents.Started, data => this.#handlePomodoroTimerStartedEvent(PomodoroEvents.Started, data))
     this.pomodoroTimer.on(PomodoroEvents.Ticked, data => this.#handlePomodoroTimerGenericEvent(PomodoroEvents.Ticked, data))
     this.pomodoroTimer.on(PomodoroEvents.Finished, data => this.#handlePomodoroTimerFinishedEvent(PomodoroEvents.Finished, data))
-    this.pomodoroTimer.on(PomodoroEvents.Stopped, data => this.#handlePomodoroTimerGenericEvent(PomodoroEvents.Stopped, data))
+    this.pomodoroTimer.on(PomodoroEvents.Stopped, data => this.#handlePomodoroTimerFinishedEvent(PomodoroEvents.Stopped, data))
     this.pomodoroTimer.on(PomodoroEvents.CycleStarted, data => this.#handlePomodoroCycleStartedEvent(PomodoroEvents.CycleStarted, data))
     this.pomodoroTimer.on(PomodoroEvents.BreakStarted, data => this.#handlePomodoroBreakStartedEvent(PomodoroEvents.BreakStarted, data))
     this.pomodoroTimer.start()
@@ -34,9 +34,11 @@ export default class BackgroundController {
     this.startPomodoroTimer()
   }
 
-  stopBlocking (): void {
+  async stopBlocking (): Promise<void> {
+    this.pomodoroTimer?.stop()
+    this.pomodoroTimer?.removeAllListeners()
     browser.tabs.onUpdated.removeListener(this.handleTabUpdated.bind(this))
-    this.timer.removeAllListeners()
+    await this.store.clearPomodoroTimer()
   }
 
   isHostnameBlocked (hostname: string): boolean {

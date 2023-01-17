@@ -12,5 +12,8 @@ export async function startController (): Promise<void> {
     if (request.startBlocking === true) {
       controller.startBlocking()
     }
+    if (request.stopBlocking === true) {
+      controller.stopBlocking()
+    }
   })
 }
