@@ -19,7 +19,7 @@ export default class BackgroundController {
   }
 
   startPomodoroTimer (): void {
-    this.pomodoroTimer = new PomodoroTimer({ duration: 10, breakDuration: 3, longBreakDuration: 3 })
+    this.pomodoroTimer = new PomodoroTimer()
     this.pomodoroTimer.on(PomodoroEvents.Started, data => this.#handlePomodoroTimerStartedEvent(PomodoroEvents.Started, data))
     this.pomodoroTimer.on(PomodoroEvents.Ticked, data => this.#handlePomodoroTimerGenericEvent(PomodoroEvents.Ticked, data))
     this.pomodoroTimer.on(PomodoroEvents.Finished, data => this.#handlePomodoroTimerFinishedEvent(PomodoroEvents.Finished, data))
