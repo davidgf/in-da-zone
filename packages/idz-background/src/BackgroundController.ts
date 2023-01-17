@@ -1,59 +1,42 @@
 import * as browser from 'webextension-polyfill'
-import { PomodoroTimerState, PomodoroEvents } from 'idz-shared'
+import { PomodoroTimerState, PomodoroEvents, PomodoroCycleStatus } from 'idz-shared'
 import Store from './Store'
 import Timer from './Timer'
 import PomodoroTimer from './PomodoroTimer'
 
+const badges = {
+  work: '🚫',
+  break: '✅',
+  clear: ''
+}
 export default class BackgroundController {
   store: Store
   timer: Timer
   pomodoroTimer: PomodoroTimer
-  isBlocking: boolean
 
   constructor ({ store }: { store: Store }) {
     this.store = store
-    this.isBlocking = false
-  }
-
-  #persistTimerState (pomodoroTimerState: PomodoroTimerState): void {
-    void this.store.save({ pomodoroTimerState })
   }
 
   startPomodoroTimer (): void {
     this.pomodoroTimer = new PomodoroTimer({ duration: 10, breakDuration: 3, longBreakDuration: 3 })
-    this.pomodoroTimer.on(PomodoroEvents.Started, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Started, data))
-    this.pomodoroTimer.on(PomodoroEvents.Ticked, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Ticked, data))
-    this.pomodoroTimer.on(PomodoroEvents.Finished, data => {
-      this.isBlocking = false
-      this.#handlePomodoroTimerEvent(PomodoroEvents.Finished, data)
-    })
-    this.pomodoroTimer.on(PomodoroEvents.Stopped, data => this.#handlePomodoroTimerEvent(PomodoroEvents.Stopped, data))
-    this.pomodoroTimer.on(PomodoroEvents.CycleStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.CycleStarted, data))
-    this.pomodoroTimer.on(PomodoroEvents.BreakStarted, data => this.#handlePomodoroTimerEvent(PomodoroEvents.BreakStarted, data))
+    this.pomodoroTimer.on(PomodoroEvents.Started, data => this.#handlePomodoroTimerStartedEvent(PomodoroEvents.Started, data))
+    this.pomodoroTimer.on(PomodoroEvents.Ticked, data => this.#handlePomodoroTimerGenericEvent(PomodoroEvents.Ticked, data))
+    this.pomodoroTimer.on(PomodoroEvents.Finished, data => this.#handlePomodoroTimerFinishedEvent(PomodoroEvents.Finished, data))
+    this.pomodoroTimer.on(PomodoroEvents.Stopped, data => this.#handlePomodoroTimerGenericEvent(PomodoroEvents.Stopped, data))
+    this.pomodoroTimer.on(PomodoroEvents.CycleStarted, data => this.#handlePomodoroCycleStartedEvent(PomodoroEvents.CycleStarted, data))
+    this.pomodoroTimer.on(PomodoroEvents.BreakStarted, data => this.#handlePomodoroBreakStartedEvent(PomodoroEvents.BreakStarted, data))
     this.pomodoroTimer.start()
   }
 
-  #handlePomodoroTimerEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
-    console.log('[BACKGROUND] #handlePomodoroTimerEvent', eventType, pomodoroState)
-    this.#persistTimerState(pomodoroState)
-    void browser.runtime.sendMessage({ eventType, pomodoroState })
-      .catch(err => console.log('[BACKGROUND] Error sending message', err))
-  }
-
   startBlocking (): void {
-    if (!this.isBlocking) {
-      this.isBlocking = true
-      browser.tabs.onUpdated.addListener(this.handleTabUpdated.bind(this))
-      this.startPomodoroTimer()
-    }
+    browser.tabs.onUpdated.addListener(this.handleTabUpdated.bind(this))
+    this.startPomodoroTimer()
   }
 
   stopBlocking (): void {
-    if (this.isBlocking) {
-      this.isBlocking = false
-      browser.tabs.onUpdated.removeListener(this.handleTabUpdated.bind(this))
-      this.timer.removeAllListeners()
-    }
+    browser.tabs.onUpdated.removeListener(this.handleTabUpdated.bind(this))
+    this.timer.removeAllListeners()
   }
 
   isHostnameBlocked (hostname: string): boolean {
@@ -65,10 +48,53 @@ export default class BackgroundController {
     if (changeInfo.url != null) {
       await this.store.load()
       const url = new URL(changeInfo.url)
-      if (this.isBlocking && this.isHostnameBlocked(url.hostname)) {
+      const { currentCycleStatus } = this.store.settings.pomodoroTimerState
+      if (currentCycleStatus === PomodoroCycleStatus.Work && this.isHostnameBlocked(url.hostname)) {
         const redirectUrl = browser.runtime.getURL('/static/redirect/redirect.html')
         await browser.tabs.update(tabId, { url: redirectUrl })
       }
     }
+  }
+
+  #persistTimerState (pomodoroTimerState: PomodoroTimerState): void {
+    void this.store.save({ pomodoroTimerState })
+  }
+
+  #setIconBadge (badgeText: string): void {
+    void browser.browserAction.setBadgeText({ text: badgeText })
+      .catch(err => console.log('[BACKGROUND] Error setting badge text', err))
+    void browser.browserAction.setBadgeBackgroundColor({ color: 'white' })
+      .catch(err => console.log('[BACKGROUND] Error setting badge background color', err))
+  }
+
+  #handlePomodoroTimerStartedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
+    console.log('[BACKGROUND] #handlePomodoroTimerStartedEvent', eventType, pomodoroState)
+    this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
+    this.#setIconBadge(badges.work)
+  }
+
+  #handlePomodoroTimerFinishedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
+    console.log('[BACKGROUND] #handlePomodoroTimerFinishedEvent', eventType, pomodoroState)
+    this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
+    this.#setIconBadge(badges.clear)
+  }
+
+  #handlePomodoroCycleStartedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
+    console.log('[BACKGROUND] #handlePomodoroCycleStartedEvent', eventType, pomodoroState)
+    this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
+    this.#setIconBadge(badges.work)
+  }
+
+  #handlePomodoroBreakStartedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
+    console.log('[BACKGROUND] #handlePomodoroBreakStartedEvent', eventType, pomodoroState)
+    this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
+    this.#setIconBadge(badges.break)
+  }
+
+  #handlePomodoroTimerGenericEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
+    console.log('[BACKGROUND] #handlePomodoroTimerGenericEvent', eventType, pomodoroState)
+    this.#persistTimerState(pomodoroState)
+    void browser.runtime.sendMessage({ eventType, pomodoroState })
+      .catch(err => console.log('[BACKGROUND] Error sending message', err))
   }
 }
