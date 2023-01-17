@@ -46,6 +46,9 @@ export default function Timer ({ pomodoroTimerState }: { pomodoroTimerState: Pom
     if (timer.duration > 0) {
       setRemainingMinutes(Math.floor(timer.remaining / 60))
       setRemainingSeconds(timer.remaining % 60)
+    } else {
+      setRemainingMinutes(0)
+      setRemainingSeconds(0)
     }
   })
 

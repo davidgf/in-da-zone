@@ -53,11 +53,8 @@ export default class PomodoroTimer extends TypedEmitter<PomodoroTimerEvents> {
   }
 
   stop (): void {
-    console.log('CLEARING')
     this.#clear()
-    console.log('EMITTING')
     this.emit(PomodoroEvents.Stopped, this.state)
-    console.log('EMITTED')
   }
 
   #initTimer (duration: number): void {

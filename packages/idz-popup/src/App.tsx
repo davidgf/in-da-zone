@@ -27,7 +27,6 @@ function App (): JSX.Element {
         const persistedPomodoroTimerState = (result.pomodoroTimerState !== undefined)
           ? result.pomodoroTimerState
           : defaultState
-        console.log('[POPUP] Loading timer state:', persistedPomodoroTimerState)
         setPomodoroTimerState(persistedPomodoroTimerState)
       })
       .catch(err => console.error('[POPUP] Error storing timer state', err))
@@ -39,13 +38,11 @@ function App (): JSX.Element {
         const persistedBlockedSites = (result.blockedHosts !== undefined)
           ? result.blockedHosts
           : []
-        console.log('[POPUP] Persisting blocked hosts:', persistedBlockedSites)
         setBlockedSites(persistedBlockedSites)
       })
       .catch(err => console.error('[POPUP] Error storing blocked sites', err))
 
     browser.runtime.onMessage.addListener(request => {
-      console.log('[POPUP] Message listened from popup', request)
       setPomodoroTimerState(request.pomodoroState)
     })
   }, [])

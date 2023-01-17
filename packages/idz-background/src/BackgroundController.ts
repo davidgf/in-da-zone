@@ -70,31 +70,26 @@ export default class BackgroundController {
   }
 
   #handlePomodoroTimerStartedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
-    console.log('[BACKGROUND] #handlePomodoroTimerStartedEvent', eventType, pomodoroState)
     this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
     this.#setIconBadge(badges.work)
   }
 
   #handlePomodoroTimerFinishedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
-    console.log('[BACKGROUND] #handlePomodoroTimerFinishedEvent', eventType, pomodoroState)
     this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
     this.#setIconBadge(badges.clear)
   }
 
   #handlePomodoroCycleStartedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
-    console.log('[BACKGROUND] #handlePomodoroCycleStartedEvent', eventType, pomodoroState)
     this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
     this.#setIconBadge(badges.work)
   }
 
   #handlePomodoroBreakStartedEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
-    console.log('[BACKGROUND] #handlePomodoroBreakStartedEvent', eventType, pomodoroState)
     this.#handlePomodoroTimerGenericEvent(eventType, pomodoroState)
     this.#setIconBadge(badges.break)
   }
 
   #handlePomodoroTimerGenericEvent (eventType: PomodoroEvents, pomodoroState: PomodoroTimerState): void {
-    console.log('[BACKGROUND] #handlePomodoroTimerGenericEvent', eventType, pomodoroState)
     this.#persistTimerState(pomodoroState)
     void browser.runtime.sendMessage({ eventType, pomodoroState })
       .catch(err => console.log('[BACKGROUND] Error sending message', err))
