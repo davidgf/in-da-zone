@@ -52,7 +52,7 @@ export default class BackgroundController {
       const url = new URL(changeInfo.url)
       const { currentCycleStatus } = this.store.settings.pomodoroTimerState
       if (currentCycleStatus === PomodoroCycleStatus.Work && this.isHostnameBlocked(url.hostname)) {
-        const redirectUrl = browser.runtime.getURL('/static/redirect/redirect.html')
+        const redirectUrl = browser.runtime.getURL('/dist/static/redirect/redirect.html')
         await browser.tabs.update(tabId, { url: redirectUrl })
       }
     }
