@@ -15,7 +15,15 @@ export default {
       devtools: true,
       buildPackage: true,
       artifactsDir: '../../dist',
-      overwriteDest: true
+      overwriteDest: true,
+      ignoreFiles: [
+        'package*.json',
+        'tsconfig.json',
+        'webpack.config.js',
+        'package',
+        'src',
+        'static'
+      ]
     }),
     new CopyWebpackPlugin({
       patterns: [
