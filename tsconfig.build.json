@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/idz-shared" },
+    { "path": "packages/idz-background" },
+    { "path": "packages/idz-extension" }
+  ]
+}

@@ -1,0 +1,25 @@
+
+# Created by https://www.gitignore.io/api/node
+
+### Node ###
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Typescript v1 declaration files
+typings/
+
+# Optional npm cache directory
+.npm
+
+# End of https://www.gitignore.io/api/node
+
+*.tsbuildinfo
+**/dist
+dist.zip
+
+.vscode
